@@ -26,7 +26,7 @@ public class TicketManager {
                 deleteTicketById();
             }
             else if (task == 3){
-                deleteTicketByIssue();
+                deleteTicketByIssue(ticketQueue);
             }
             else if (task == 4){
                 searchByIssue(ticketQueue);
@@ -86,12 +86,42 @@ public class TicketManager {
 
 
 
-    protected void deleteTicketByIssue() {
+    protected void deleteTicketByIssue(LinkedList<Ticket> ticketQueue) {
         // TODO problem 5 implement this method
         // Ask user for string to search for
         // Use searchDescription to create list of matching Tickets
         // Ask for ID of ticket to delete
         // Delete that ticket
+
+        LinkedList<Ticket> searchResults = new LinkedList<>();
+
+        printAllTickets();
+
+        if (ticketQueue.size() == 0) {
+            System.out.println("No tickets to search for, please try again.");
+            return;
+        }
+
+
+        String searchKey = Input.getStringInput("Enter a KEYWORD for ticket to be deleted");
+
+        for (Ticket t : ticketQueue) {
+            if (t.getDescription().contains(searchKey)) {
+                searchResults.add(t);
+            }
+        }
+
+        System.out.println("Here is a list of possible tickets" + searchResults);
+
+        if (searchResults.size() == 0){
+            System.out.println("No tickets matching that description were found, please try again...");
+            deleteTicketByIssue(ticketQueue);
+        }
+
+        else if (searchResults.size() > 0){
+            deleteTicketById();
+        }
+
     }
 
 
@@ -117,8 +147,8 @@ public class TicketManager {
             }
         }
         if (!found) {
-            System.out.println("Ticket ID not found, please enter a valid ticket ID.\n\n Returning to main menu...");
-
+            System.out.println("Ticket ID not found, please enter a valid ticket ID.");
+            deleteTicketById();
         }
         printAllTickets();//print updated list
 
