@@ -6,6 +6,9 @@ public class Ticket {
 
     private int priority;
     private String reporter; //Stores person or department who reported issue
+
+
+
     private String description;
     private Date dateReported;
 
@@ -31,6 +34,7 @@ public class Ticket {
         this.ticketID = ticketIdCounter;
         ticketIdCounter++;
     }
+    public String getDescription() {return description;}
 
     protected int getPriority() {
         return priority;
