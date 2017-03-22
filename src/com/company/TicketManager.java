@@ -1,5 +1,7 @@
 package com.company;
 
+import sun.awt.image.ImageWatched;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -7,6 +9,8 @@ import java.util.Scanner;
 public class TicketManager {
 
   static  LinkedList<Ticket> ticketQueue = new LinkedList<Ticket>();
+
+  static LinkedList<Ticket> resolvedTicket = new LinkedList<>();
 
     private void mainMenu() {
 
@@ -55,7 +59,7 @@ public class TicketManager {
         // The search should be case-insensitive
     }
 
-        protected static void searchByIssue (LinkedList < Ticket > ticketQueue) {
+        protected  void searchByIssue (LinkedList < Ticket > ticketQueue) {
             // TODO problem 4 implement this method. Return a list of matching tickets.
 
             // Ask user for search term
@@ -82,7 +86,13 @@ public class TicketManager {
             }
 
             System.out.println("Here is a list of possible tickets" + searchResults);
+
+            if (searchResults.size() == 0){
+                System.out.println("No tickets matching that description were found, please try again...");
+                searchByIssue(ticketQueue);
+            }
         }
+
 
 
 
@@ -136,11 +146,17 @@ public class TicketManager {
 
         int deleteID = Input.getPositiveIntInput("Enter ID of ticket to delete");
 
+        String resolution = Input.getStringInput("What was the resolution?");
+
+        Date today = new Date();
         //Loop over all tickets. Delete the one with this ticket ID
         boolean found = false;
         for (Ticket ticket : ticketQueue) {
             if (ticket.getTicketID() == deleteID) {
                 found = true;
+                ticket.getFixDescription(resolution);
+                ticket.getDateResolved(today);
+                resolvedTicket.add(ticket);
                 ticketQueue.remove(ticket);
                 System.out.println(String.format("Ticket %d deleted", deleteID));
                 break; //don't need the loop any more.
@@ -165,7 +181,7 @@ public class TicketManager {
             String reporter = Input.getStringInput("Who reported this issue?");
             int priority = Input.getPositiveIntInput("Enter priority of " + description);
 
-            Ticket t = new Ticket(description, priority, reporter, dateReported);
+            Ticket t = new Ticket(description, priority, reporter, dateReported, null, null);
             //ticketQueue.add(t);
             addTicketInPriorityOrder(t);
 

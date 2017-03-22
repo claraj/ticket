@@ -6,11 +6,10 @@ public class Ticket {
 
     private int priority;
     private String reporter; //Stores person or department who reported issue
-
-
-
     private String description;
     private Date dateReported;
+    private Date dateResolved;
+    private String fixDescription;
 
     //TODO Problem 1: explain the role of ticketIdCounter and ticketID
 
@@ -26,15 +25,19 @@ public class Ticket {
     // Either add them to this class or create another class called ResolvedTicket - which
     // do you think is the better approach?
 
-    public Ticket(String desc, int p, String rep, Date date) {
+    public Ticket(String desc, int p, String rep, Date date, String fix, Date resDate) {
         this.description = desc;
         this.priority = p;
         this.reporter = rep;
         this.dateReported = date;
+        this.dateResolved = resDate;
+        this.fixDescription = fix;
         this.ticketID = ticketIdCounter;
         ticketIdCounter++;
     }
-    public String getDescription() {return description;}
+    public String getDescription() {
+        return description;
+    }
 
     protected int getPriority() {
         return priority;
@@ -42,6 +45,14 @@ public class Ticket {
 
     public int getTicketID() {
         return ticketID;
+    }
+
+    public Date getDateResolved(Date today) {
+        return dateResolved;
+    }
+
+    public String getFixDescription(String resolution) {
+        return fixDescription;
     }
 
     public String toString(){
