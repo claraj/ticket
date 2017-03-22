@@ -13,15 +13,14 @@ import java.util.Scanner;
 
 public class TicketManager {
 
-  static  LinkedList<Ticket> ticketQueue = new LinkedList<Ticket>();
+  static  LinkedList<Ticket> ticketQueue = new LinkedList<Ticket>(); //list for tickets in queue
 
-  static LinkedList<Ticket> resolvedTicket = new LinkedList<>();
+  static LinkedList<Ticket> resolvedTicket = new LinkedList<>(); //list of resolved tickets
 
-    private void mainMenu() throws Exception{
+    private void mainMenu() throws Exception{ //main menu method starts after main method
 
         while (true) {
 
-            //TODO problem 4 - add two new options: Delete by Issue and Search by Issue
             System.out.println("1. Enter Ticket\n2. Delete Ticket by ID\n3. Delete Ticket by issue\n4. Search Ticket by issue" +
                     "\n5. Display All Tickets\n6. Save & Quit");
 
@@ -43,25 +42,22 @@ public class TicketManager {
             else if (task == 5) {
                 printAllTickets();
             }
-            else if ( task == 6 ) {
+            else if ( task == 6 ) { //creating a new buffered writer that saves open tickets to a txt file
 
                 BufferedWriter quitWriter = new BufferedWriter(new FileWriter("open_tickets.txt"));
 
-                for (Ticket t : ticketQueue){
+                for (Ticket t : ticketQueue){ //for each ticket in the ticketqueue list it writes its info in this format
                     quitWriter.write("Issue: " + t.getDescription() + "\r\nPriority: " + t.getPriority() + "\r\nReporter: " +
                             t.getReporter() + "\r\nDate reported: " + t.getDateReported() + "\r\n\n");
                 }
 
                 String date = new SimpleDateFormat("MMM_dd_yyyy").format(new Date());
 
-
-
-
-                String closedTix = "Resolved_tix_as_of_" + date + ".txt";
+                String closedTix = "Resolved_tix_as_of_" + date + ".txt"; //creating a resolved txt file
 
                 BufferedWriter resolvedWriter = new BufferedWriter(new FileWriter(closedTix));
 
-                for (Ticket t : resolvedTicket){
+                for (Ticket t : resolvedTicket){ //similar to the open ticket txt file but with resolved tickets
                     resolvedWriter.write("Issue: " + t.getDescription() + "\r\nPriority: " + t.getPriority() + "\r\nReporter: " +
                             t.getReporter() + "\r\nDate reported: " + t.getDateReported() + "\r\nDate resolved: " +
                             t.getDateResolved() + "\r\nResolution: " + t.getFixDescription() + "\r\n\n");
@@ -70,11 +66,8 @@ public class TicketManager {
                 quitWriter.close();
                 resolvedWriter.close();
 
-
-
-
                 System.out.println("Quitting program");
-                // TODO Problem 7 save all open tickets, and today's resolved tickets, to a file
+
                 break;
             }
             else {
@@ -86,42 +79,35 @@ public class TicketManager {
     }
 
 
-    protected static void  searchDescription(LinkedList<Ticket> ticketQueue) {
-        // TODO problem 3: complete this method - it should return a
-        // list of the tickets that contain the searchString in the description.
-        // Return an empty list if there are no matching Tickets.
-        // The search should be case-insensitive
-    }
 
         protected  void searchByIssue (LinkedList < Ticket > ticketQueue) {
-            // TODO problem 4 implement this method. Return a list of matching tickets.
 
             // Ask user for search term
             // Use searchDescription() method to get list of matching Tickets
             // display list
 
-            LinkedList<Ticket> searchResults = new LinkedList<>();
+            LinkedList<Ticket> searchResults = new LinkedList<>(); //list to store search results
 
             printAllTickets();
 
-            if (ticketQueue.size() == 0) {
+            if (ticketQueue.size() == 0) { //validating
                 System.out.println("No tickets to search for, please try again.");
                 return;
             }
 
             //System.out.println("Enter a KEYWORD to search for");
-
+            //variable to hold search term
             String searchKey = Input.getStringInput("Enter a KEYWORD to search for");
 
-            for (Ticket t : ticketQueue) {
+            for (Ticket t : ticketQueue) { //loops through queue to find matching character string
                 if (t.getDescription().contains(searchKey)) {
-                    searchResults.add(t);
+                    searchResults.add(t); //adds result to search result linklist
                 }
             }
 
-            System.out.println("Here is a list of possible tickets" + searchResults);
+            System.out.println("Here is a list of possible tickets" + searchResults); //prints list to console
 
-            if (searchResults.size() == 0){
+            if (searchResults.size() == 0){ //validating if there are any tickets in search
                 System.out.println("No tickets matching that description were found, please try again...");
                 searchByIssue(ticketQueue);
             }
@@ -137,7 +123,7 @@ public class TicketManager {
         // Ask for ID of ticket to delete
         // Delete that ticket
 
-        LinkedList<Ticket> searchResults = new LinkedList<>();
+        LinkedList<Ticket> searchResults = new LinkedList<>(); //almost identical to the search by issue method
 
         printAllTickets();
 
@@ -162,7 +148,7 @@ public class TicketManager {
             deleteTicketByIssue(ticketQueue);
         }
 
-        else if (searchResults.size() > 0){
+        else if (searchResults.size() > 0){ //if the link list contains any results then it runs the delete by ID method
             deleteTicketById();
         }
 
@@ -191,7 +177,7 @@ public class TicketManager {
                 found = true;
                 ticket.setFixDescription(resolution);
                 ticket.setDateResolved(today);
-                resolvedTicket.add(ticket);
+                resolvedTicket.add(ticket); //adds to resolved ticket list
                 ticketQueue.remove(ticket);
                 System.out.println(String.format("Ticket %d deleted", deleteID));
                 break; //don't need the loop any more.
@@ -199,7 +185,7 @@ public class TicketManager {
         }
         if (!found) {
             System.out.println("Ticket ID not found, please enter a valid ticket ID.");
-            deleteTicketById();
+            deleteTicketById(); //runs method again if mistake was made
         }
         printAllTickets();//print updated list
 
@@ -276,7 +262,7 @@ public class TicketManager {
     public static void main(String[] args) throws Exception{
         TicketManager manager = new TicketManager();
 
-        //TODO problem 8 load open tickets from a file
+        //Writes any tickets that were open again and reads any open tickets into the ticket queue list
 
         BufferedWriter openWriter = new BufferedWriter(new FileWriter("open_tickets.txt",true));
 
@@ -292,9 +278,6 @@ public class TicketManager {
         }
 
         openWriter.close();
-
-        //TODO Problem 9 how will you know what ticket ID to start with?
-
         manager.mainMenu();
     }
 

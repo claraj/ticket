@@ -20,7 +20,7 @@ public class Ticket {
     //Make it private - only Ticket objects should have access
     private static int ticketIdCounter = 1;
 
-    protected static void ReadID(){
+    protected static void ReadID(){         //reading the id counter into the variable ticketIDcounter
         try{
             ticketIdCounter = ReadIDCounter();
         }
@@ -29,7 +29,7 @@ public class Ticket {
         }
     }
 
-    protected static void WriteID(){
+    protected static void WriteID(){ //running the writeIDcounter method
         try{
             WriteIDCounter();
         }
@@ -38,7 +38,7 @@ public class Ticket {
         }
     }
 
-    protected static int ReadIDCounter() throws Exception{
+    protected static int ReadIDCounter() throws Exception{ //reads from current ticket and returns counter number
         int countNum = 1;
         FileReader input = new FileReader("current_ticket.txt");
         countNum = input.read();
@@ -46,7 +46,7 @@ public class Ticket {
         return countNum;
     }
 
-    protected static void WriteIDCounter() throws Exception{
+    protected static void WriteIDCounter() throws Exception{ //writes ticketIDcounter to txt file
         FileWriter output = new FileWriter("current_ticket.txt");
         output.write(ticketIdCounter);
         output.close();
@@ -71,7 +71,7 @@ public class Ticket {
     }
     public String getDescription() {
         return description;
-    }
+    } //getters and setters
 
     protected int getPriority() {
         return priority;
