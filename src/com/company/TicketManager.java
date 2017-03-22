@@ -1,7 +1,12 @@
 package com.company;
 
+import jdk.nashorn.internal.runtime.ECMAException;
 import sun.awt.image.ImageWatched;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -12,7 +17,7 @@ public class TicketManager {
 
   static LinkedList<Ticket> resolvedTicket = new LinkedList<>();
 
-    private void mainMenu() {
+    private void mainMenu() throws Exception{
 
         while (true) {
 
@@ -39,6 +44,35 @@ public class TicketManager {
                 printAllTickets();
             }
             else if ( task == 6 ) {
+
+                BufferedWriter quitWriter = new BufferedWriter(new FileWriter("open_tickets.txt"));
+
+                for (Ticket t : ticketQueue){
+                    quitWriter.write("Issue: " + t.getDescription() + "\r\nPriority: " + t.getPriority() + "\r\nReporter: " +
+                            t.getReporter() + "\r\nDate reported: " + t.getDateReported() + "\r\n\n");
+                }
+
+                String date = new SimpleDateFormat("MMM_dd_yyyy").format(new Date());
+
+
+
+
+                String closedTix = "Resolved_tix_as_of_" + date + ".txt";
+
+                BufferedWriter resolvedWriter = new BufferedWriter(new FileWriter(closedTix));
+
+                for (Ticket t : resolvedTicket){
+                    resolvedWriter.write("Issue: " + t.getDescription() + "\r\nPriority: " + t.getPriority() + "\r\nReporter: " +
+                            t.getReporter() + "\r\nDate reported: " + t.getDateReported() + "\r\nDate resolved: " +
+                            t.getDateResolved() + "\r\nResolution: " + t.getFixDescription() + "\r\n\n");
+                }
+
+                quitWriter.close();
+                resolvedWriter.close();
+
+
+
+
                 System.out.println("Quitting program");
                 // TODO Problem 7 save all open tickets, and today's resolved tickets, to a file
                 break;
@@ -135,6 +169,7 @@ public class TicketManager {
     }
 
 
+
     protected void deleteTicketById() {
 
         printAllTickets();   //display list for user
@@ -146,7 +181,7 @@ public class TicketManager {
 
         int deleteID = Input.getPositiveIntInput("Enter ID of ticket to delete");
 
-        String resolution = Input.getStringInput("What was the resolution?");
+       String resolution = Input.getStringInput("What was the resolution?");
 
         Date today = new Date();
         //Loop over all tickets. Delete the one with this ticket ID
@@ -154,8 +189,8 @@ public class TicketManager {
         for (Ticket ticket : ticketQueue) {
             if (ticket.getTicketID() == deleteID) {
                 found = true;
-                ticket.getFixDescription(resolution);
-                ticket.getDateResolved(today);
+                ticket.setFixDescription(resolution);
+                ticket.setDateResolved(today);
                 resolvedTicket.add(ticket);
                 ticketQueue.remove(ticket);
                 System.out.println(String.format("Ticket %d deleted", deleteID));
@@ -238,10 +273,25 @@ public class TicketManager {
 
     /* Main is hiding down here. Create a TicketManager object, and call the mainMenu method.
     Avoids having to make all of the methods in this class static. */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         TicketManager manager = new TicketManager();
 
         //TODO problem 8 load open tickets from a file
+
+        BufferedWriter openWriter = new BufferedWriter(new FileWriter("open_tickets.txt",true));
+
+        Scanner fileInput = new Scanner(new File("open_tickets.txt"));
+
+        String dateForm = "EEE MMM dd hh:mm:ss z yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(dateForm);
+
+        while (fileInput.hasNext()){
+            Ticket openTicket = new Ticket(fileInput.nextLine(),Integer.parseInt(fileInput.nextLine()),
+                   fileInput.nextLine(),format.parse(fileInput.nextLine()),null,null);
+            ticketQueue.add(openTicket);
+        }
+
+        openWriter.close();
 
         //TODO Problem 9 how will you know what ticket ID to start with?
 

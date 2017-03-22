@@ -1,5 +1,7 @@
 package com.company;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Date;
 
 public class Ticket {
@@ -17,6 +19,38 @@ public class Ticket {
     //If any Ticket object modifies this counter, all Ticket objects will have the modified value
     //Make it private - only Ticket objects should have access
     private static int ticketIdCounter = 1;
+
+    protected static void ReadID(){
+        try{
+            ticketIdCounter = ReadIDCounter();
+        }
+        catch (Exception Ex){
+            System.out.println("Error");
+        }
+    }
+
+    protected static void WriteID(){
+        try{
+            WriteIDCounter();
+        }
+        catch (Exception Ex){
+            System.out.println("Error");
+        }
+    }
+
+    protected static int ReadIDCounter() throws Exception{
+        int countNum = 1;
+        FileReader input = new FileReader("current_ticket.txt");
+        countNum = input.read();
+        input.close();
+        return countNum;
+    }
+
+    protected static void WriteIDCounter() throws Exception{
+        FileWriter output = new FileWriter("current_ticket.txt");
+        output.write(ticketIdCounter);
+        output.close();
+    }
 
     //The ID for each ticket - an instance variable. Each Ticket will have it's own ticketID variable
     protected int ticketID;
@@ -47,17 +81,32 @@ public class Ticket {
         return ticketID;
     }
 
-    public Date getDateResolved(Date today) {
-        return dateResolved;
+    public Date getDateResolved() {return dateResolved;}
+
+    public String getFixDescription() {
+        return fixDescription;
     }
 
-    public String getFixDescription(String resolution) {
-        return fixDescription;
+    public String getReporter() {
+        return reporter;
+    }
+
+    public Date getDateReported() {
+        return dateReported;
+    }
+
+    public void setDateResolved(Date dateResolved) {
+        this.dateResolved = dateResolved;
+    }
+
+    public void setFixDescription(String fixDescription) {
+        this.fixDescription = fixDescription;
     }
 
     public String toString(){
         return("ID: " + this.ticketID + " Issue: " + this.description + " Priority: " + 					this.priority + " Reported by: "
-                + this.reporter + " Reported on: " + this.dateReported + "\n");
+                + this.reporter + " Reported on: " + this.dateReported + " Resolved on: " +
+        this.dateResolved + " Resolution: " + this.fixDescription);
     }
 }
 
