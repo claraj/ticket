@@ -1,8 +1,4 @@
 package com.company;
-
-import jdk.nashorn.internal.runtime.ECMAException;
-import sun.awt.image.ImageWatched;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

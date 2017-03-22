@@ -20,6 +20,8 @@ public class Ticket {
     //Make it private - only Ticket objects should have access
     private static int ticketIdCounter = 1;
 
+
+
     protected static void ReadID(){         //reading the id counter into the variable ticketIDcounter
         try{
             ticketIdCounter = ReadIDCounter();
@@ -104,7 +106,7 @@ public class Ticket {
     }
 
     public String toString(){
-        return("ID: " + this.ticketID + " Issue: " + this.description + " Priority: " + 					this.priority + " Reported by: "
+        return("ID: " + this.ticketID + " Issue: " + this.description + " Priority: " + this.priority + " Reported by: "
                 + this.reporter + " Reported on: " + this.dateReported + " Resolved on: " +
         this.dateResolved + " Resolution: " + this.fixDescription);
     }
