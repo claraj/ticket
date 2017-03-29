@@ -1,7 +1,8 @@
 package com.company;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+
+import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -12,6 +13,44 @@ public class TicketManager {
   static  LinkedList<Ticket> ticketQueue = new LinkedList<Ticket>(); //list for tickets in queue
 
   static LinkedList<Ticket> resolvedTicket = new LinkedList<>(); //list of resolved tickets
+
+
+    public static void main(String[] args) throws Exception{
+        TicketManager manager = new TicketManager();
+
+        //Writes any tickets that were open again and reads any open tickets into the ticket queue list
+
+        BufferedWriter openWriter = new BufferedWriter(new FileWriter("open_tickets.txt",true));
+
+        Scanner fileInput = new Scanner(new File("open_tickets.txt"));
+
+        String dateForm = "EEE MMM dd hh:mm:ss z yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(dateForm);
+
+
+
+        try {
+            while (fileInput.hasNext()) {
+                Ticket openTicket = new Ticket(fileInput.nextLine(),Integer.parseInt(fileInput.nextLine().substring(10)),
+                        fileInput.nextLine(),
+                        format.parse(fileInput.nextLine().substring(15)),
+                        null,
+                        null);
+                ticketQueue.add(openTicket);
+            }
+        }catch
+                (NumberFormatException ex) {
+            System.out.println("Error");
+        }
+//}catch
+//        (ParseException e){
+//    System.out.println("error");
+//}
+
+
+        openWriter.close();
+        manager.mainMenu();
+    }
 
     private void mainMenu() throws Exception{ //main menu method starts after main method
 
@@ -42,9 +81,10 @@ public class TicketManager {
 
                 BufferedWriter quitWriter = new BufferedWriter(new FileWriter("open_tickets.txt"));
 
+
                 for (Ticket t : ticketQueue){ //for each ticket in the ticketqueue list it writes its info in this format
-                    quitWriter.write("Issue: " + t.getDescription() + "\r\nPriority: " + t.getPriority() + "\r\nReporter: " +
-                            t.getReporter() + "\r\nDate reported: " + t.getDateReported() + "\r\n\n");
+                    quitWriter.write( t.getDescription() + "\nPriority: " + t.getPriority() + "\n" +
+                            t.getReporter() + "\nDate reported: " + t.getDateReported() + "\n");
                 }
 
                 String date = new SimpleDateFormat("MMM_dd_yyyy").format(new Date());
@@ -54,9 +94,9 @@ public class TicketManager {
                 BufferedWriter resolvedWriter = new BufferedWriter(new FileWriter(closedTix));
 
                 for (Ticket t : resolvedTicket){ //similar to the open ticket txt file but with resolved tickets
-                    resolvedWriter.write("Issue: " + t.getDescription() + "\r\nPriority: " + t.getPriority() + "\r\nReporter: " +
-                            t.getReporter() + "\r\nDate reported: " + t.getDateReported() + "\r\nDate resolved: " +
-                            t.getDateResolved() + "\r\nResolution: " + t.getFixDescription() + "\r\n\n");
+                    resolvedWriter.write("Issue: " + t.getDescription() + "\nPriority: " + t.getPriority() + "\nReporter: " +
+                            t.getReporter() + "\nDate reported: " + t.getDateReported() + "\nDate resolved: " +
+                            t.getDateResolved() + "\nResolution: " + t.getFixDescription() + "\n");
                 }
 
                 quitWriter.close();
@@ -255,27 +295,6 @@ public class TicketManager {
 
     /* Main is hiding down here. Create a TicketManager object, and call the mainMenu method.
     Avoids having to make all of the methods in this class static. */
-    public static void main(String[] args) throws Exception{
-        TicketManager manager = new TicketManager();
-
-        //Writes any tickets that were open again and reads any open tickets into the ticket queue list
-
-        BufferedWriter openWriter = new BufferedWriter(new FileWriter("open_tickets.txt",true));
-
-        Scanner fileInput = new Scanner(new File("open_tickets.txt"));
-
-        String dateForm = "EEE MMM dd hh:mm:ss z yyyy";
-        SimpleDateFormat format = new SimpleDateFormat(dateForm);
-
-        while (fileInput.hasNext()){
-            Ticket openTicket = new Ticket(fileInput.nextLine(),Integer.parseInt(fileInput.nextLine()),
-                   fileInput.nextLine(),format.parse(fileInput.nextLine()),null,null);
-            ticketQueue.add(openTicket);
-        }
-
-        openWriter.close();
-        manager.mainMenu();
-    }
 
 }
 
