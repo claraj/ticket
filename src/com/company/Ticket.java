@@ -18,41 +18,41 @@ public class Ticket {
     //STATIC Counter - one variable, shared by all Ticket objects.
     //If any Ticket object modifies this counter, all Ticket objects will have the modified value
     //Make it private - only Ticket objects should have access
-    private static int ticketIdCounter = 1;
+    private static int ticketIdCounter = TicketGui.getCurrentId();
 
 
 
-    protected static void ReadID(){         //reading the id counter into the variable ticketIDcounter
-        try{
-            ticketIdCounter = ReadIDCounter();
-        }
-        catch (Exception Ex){
-            System.out.println("Error");
-        }
-    }
-
-    protected static void WriteID(){ //running the writeIDcounter method
-        try{
-            WriteIDCounter();
-        }
-        catch (Exception Ex){
-            System.out.println("Error");
-        }
-    }
-
-    protected static int ReadIDCounter() throws Exception{ //reads from current ticket and returns counter number
-        int countNum = 1;
-        FileReader input = new FileReader("current_ticket.txt");
-        countNum = input.read();
-        input.close();
-        return countNum;
-    }
-
-    protected static void WriteIDCounter() throws Exception{ //writes ticketIDcounter to txt file
-        FileWriter output = new FileWriter("current_ticket.txt");
-        output.write(ticketIdCounter);
-        output.close();
-    }
+//    protected static void ReadID(){         //reading the id counter into the variable ticketIDcounter
+//        try{
+//            ticketIdCounter = ReadIDCounter();
+//        }
+//        catch (Exception Ex){
+//            System.out.println("Error");
+//        }
+//    }
+//
+//    protected static void WriteID(){ //running the writeIDcounter method
+//        try{
+//            WriteIDCounter();
+//        }
+//        catch (Exception Ex){
+//            System.out.println("Error");
+//        }
+//    }
+//
+//    protected static int ReadIDCounter() throws Exception{ //reads from current ticket and returns counter number
+//        int countNum = 1;
+//        FileReader input = new FileReader("current_ticket.txt");
+//        countNum = input.read();
+//        input.close();
+//        return countNum;
+//    }
+//
+//    protected static void WriteIDCounter() throws Exception{ //writes ticketIDcounter to txt file
+//        FileWriter output = new FileWriter("current_ticket.txt");
+//        output.write(ticketIdCounter);
+//        output.close();
+//    }
 
     //The ID for each ticket - an instance variable. Each Ticket will have it's own ticketID variable
     protected int ticketID;
