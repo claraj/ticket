@@ -1,6 +1,6 @@
-package com.company;
+package com.happy;
 
-import java.util.Scanner;
+        import java.util.Scanner;
 
 /**
  * Collection of methods to get user input; validate numerical input.
