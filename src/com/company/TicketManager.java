@@ -50,7 +50,7 @@ public class TicketManager {
 
 
     protected void searchByIssue() {
-        // TODO problem 4 implement this method. Return a list of matching tickets.
+        // TODO problem 4 implement this method. Display a list of matching tickets.
 
         // Ask user for search term
         // Use searchDescription() method to get list of matching Tickets
