@@ -3,6 +3,8 @@ package com.company;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -88,6 +90,8 @@ public class TicketGui extends JFrame{
         priorityComboBox1.addItem(3);
         priorityComboBox1.addItem(4);
         priorityComboBox1.addItem(5);
+        searchTxt.addFocusListener(new FocusAdapter() {
+        });
     }
 
     public static int getCurrentId(){
@@ -104,7 +108,47 @@ public class TicketGui extends JFrame{
     }
 
 
+    // Reset the helper text to the default values
+    // May be helpful to put all of your JTextFields in an array and loop over that.
+    protected void setHelperText() {
+        searchTxt.setText("Search...");
+        reporterTxt.setText("Reporter...");
+        // same for other JTextFields etc...
+    }
+
     public void listeners(){
+
+        // A listener that listens for the user focusing on a component
+        FocusAdapter placeHolderTextClear = new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+                super.focusGained(e);
+
+                // If the user has focused - clicked on, or tabbed to - a JTextField - clear the placeholder text
+                // You probably don't want to clear the text if the user has typed in some of their
+                // own text, so check if the current text is placeholder or not.
+                if (e.getSource() instanceof JTextField) {
+                    JTextField textField = (JTextField) e.getSource();
+                    if (textField.getText().contains("...")) {  // TODO think of a more robust way to verify if text is a placeholder or not. User's data may contain '...' 
+                        textField.setText("");
+                    }
+                }
+                else {
+                    System.out.println("some other component");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+            }
+        };
+
+        searchTxt.addFocusListener(placeHolderTextClear);
+        reporterTxt.addFocusListener(placeHolderTextClear);
+        // etc ...
+
 
         addTicketButton.addActionListener(new ActionListener() {
             @Override
@@ -119,6 +163,8 @@ public class TicketGui extends JFrame{
                 priorityOrder(ticketQueue, ticket);
                 listModel.addElement(ticket);
                 ticketIdComboBox1.addItem(ticket.getTicketID());
+
+                setHelperText();
             }
         });
 
